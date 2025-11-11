@@ -2,23 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// LEAD COMMENT: State นี้จัดการ Logic การโจมตีทั้งหมด
-// หน้าที่ของมันคือ:
-// 1. เลือกว่าจะเล่น Animation โจมตีเบา หรือ หนัก
-// 2. ล็อคการเคลื่อนที่และการกระทำอื่นๆ ขณะโจมตี
-// 3. เมื่อ Animation จบ ให้กลับสู่ GroundedState
-// 4. (อนาคต) ดักจับ Input เพื่อทำคอมโบต่อเนื่อง
 public class PlayerAttackState : IPlayerState
 {
     private readonly PlayerController _playerController;
-
-    // --- State-Specific Parameters ---
+    
     private float _attackDuration;
     private float _stateTimer;
     private bool _isHeavyAttack;
 
-    // LEAD COMMENT: เราจะสร้างตัวแปร public เพื่อให้ State อื่นสามารถกำหนดประเภทการโจมตีก่อนจะสลับมา State นี้ได้
-    // นี่เป็นวิธีที่ง่ายและสะอาดในการส่งข้อมูลระหว่าง State
+    // --- [เพิ่มใหม่] ---
+    [Header("Attack Targeting Settings")]
+    private float _attackSearchRadius = 5f; // ระยะสูงสุดที่จะค้นหาศัตรูเพื่อหันไปหา
+    private LayerMask _enemyLayer;
+
     public void SetAttackType(bool isHeavy, float lightAttackAnimTime, float heavyAttackAnimTime)
     {
         _isHeavyAttack = isHeavy;
@@ -28,32 +24,31 @@ public class PlayerAttackState : IPlayerState
     public PlayerAttackState(PlayerController playerController)
     {
         _playerController = playerController;
+        // --- [เพิ่มใหม่] ---
+        _enemyLayer = LayerMask.GetMask("Enemy"); // ดึง Layer "Enemy" มาใช้
     }
 
     public void Enter()
     {
-        Debug.Log("SUCCESS! Switched to AttackState. Triggering animation now...");
-        Debug.Log("Entering Attack State (Heavy: " + _isHeavyAttack + ")");
+        // --- [อัปเกรด] ---
+        // LEAD COMMENT: นี่คือ Logic การ "ล็อคเป้าหมาย" ของเรา
+        RotateTowardsClosestEnemy();
+
+        float staminaCost = _isHeavyAttack ?
+            _playerController.PlayerStatus.runtimeStats.heavyAttackStaminaCost :
+            _playerController.PlayerStatus.runtimeStats.lightAttackStaminaCost;
+        _playerController.PlayerStatus.UseStamina(staminaCost);
+
         _stateTimer = _attackDuration;
 
-        // LEAD COMMENT: เลือก Trigger Animation ที่จะเล่นตามประเภทการโจมตีที่ตั้งค่าไว้
         if (_isHeavyAttack)
-        {
             _playerController.GetAnimator().SetTrigger(_playerController.HeavyAttackHash);
-        }
         else
-        {
             _playerController.GetAnimator().SetTrigger(_playerController.LightAttackHash);
-        }
-
-        // (ส่วนนี้ยังไม่เขียน แต่เป็นจุดที่จะเพิ่ม Logic ในอนาคต)
-        // PlayerStatus.UseStamina(attackStaminaCost);
-        // EnableHitbox(); // เปิดพื้นที่การโจมตีเพื่อสร้างความเสียหาย
     }
 
     public void Update()
     {
-        // นับเวลาถอยหลังเหมือน DodgeState
         _stateTimer -= Time.deltaTime;
         if (_stateTimer <= 0f)
         {
@@ -61,25 +56,36 @@ public class PlayerAttackState : IPlayerState
         }
     }
 
-    public void Exit()
+    public void Exit() { }
+    
+    // --- [เพิ่มใหม่] ---
+    private void RotateTowardsClosestEnemy()
     {
-        Debug.Log("Exiting Attack State");
+        // 1. ค้นหา Collider ทั้งหมดที่อยู่ใน Layer "Enemy" และอยู่ในรัศมีที่กำหนด
+        Collider[] enemies = Physics.OverlapSphere(
+            _playerController.transform.position,
+            _attackSearchRadius,
+            _enemyLayer
+        );
 
-        // (ส่วนนี้ยังไม่เขียน แต่เป็นจุดที่จะเพิ่ม Logic ในอนาคต)
-        // DisableHitbox(); // ปิดพื้นที่การโจมตี ป้องกันดาเมจค้าง
+        // 2. ถ้าเจอศัตรูอย่างน้อยหนึ่งตัว
+        if (enemies.Length > 0)
+        {
+            // (ในเกมนี้เรารู้ว่ามีแค่ตัวเดียว เลยเอาตัวแรกได้เลย)
+            Transform closestEnemy = enemies[0].transform;
+
+            // 3. คำนวณทิศทางที่จะหันไปหา
+            Vector3 directionToEnemy = (closestEnemy.position - _playerController.transform.position).normalized;
+
+            // 4. "วาร์ป" การหมุนของตัวละครให้หันไปหาศัตรูทันทีในเฟรมแรก
+            _playerController.transform.rotation = Quaternion.LookRotation(new Vector3(directionToEnemy.x, 0, directionToEnemy.z));
+        }
+        // ถ้าไม่เจอศัตรูในระยะ, ก็จะโจมตีไปข้างหน้าที่หันอยู่ตามปกติ
     }
-
-    // --- Input Handling for Future Combo System ---
-    public void OnLightAttack()
-    {
-        // LEAD COMMENT: สำหรับตอนนี้เรายังไม่ทำคอมโบ
-        // แต่ในอนาคต เราสามารถเช็คได้ที่นี่ว่าถ้าผู้เล่นกดโจมตีอีกครั้ง
-        // ในช่วงท้ายๆ ของ Animation ปัจจุบัน ให้เริ่มการโจมตีครั้งต่อไปเลย
-        // เช่น if (_canCombo) { ResetTimerAndPlayNextAttack(); }
-    }
-
-    // ปล่อยว่างเพื่อล็อคการควบคุม
+    
+    // --- Input Handling ---
     public void OnJump() { }
     public void OnDash() { }
+    public void OnLightAttack() { }
     public void OnHeavyAttack() { }
 }

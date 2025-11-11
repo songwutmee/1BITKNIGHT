@@ -7,31 +7,52 @@ public class InputManager : MonoBehaviour
 {
     private PlayerController _playerController;
     private PlayerInput _playerInput;
-
-    // --- [วิธีใหม่] สร้าง Action สำหรับคลิกซ้ายโดยตรงในโค้ด ---
-    // นี่คือการ "ต่อสายตรง" ของเรา
     private InputAction _lightClickAction;
+
+    // --- [เพิ่มใหม่] ---
+    // LEAD COMMENT: เราจะสร้าง Singleton สำหรับ InputManager ด้วย
+    // เพื่อให้ GameManager สามารถเข้าถึง "สวิตช์" ของเราได้อย่างง่ายดาย
+    public static InputManager Instance { get; private set; }
 
     private void Awake()
     {
+        // --- [เพิ่มใหม่] ---
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+
         _playerController = GetComponent<PlayerController>();
         _playerInput = GetComponent<PlayerInput>();
-
-        // --- [วิธีใหม่] กำหนดค่าและเตรียม "สายไฟ" ของเรา ---
-        // 1. สร้าง Action ขึ้นมาใหม่ บอกว่าเราสนใจการคลิกเมาส์ซ้ายโดยเฉพาะ
         _lightClickAction = new InputAction(binding: "<Mouse>/leftButton");
-
-        // 2. บอกว่าถ้า Action นี้เกิดขึ้น (performed), ให้ไปเรียกฟังก์ชัน OnLightAttackPerformed
-        // สังเกตว่าเราไม่ได้ใช้ context จาก PlayerInput แต่จะสร้างของเราเอง
         _lightClickAction.performed += OnLightAttackPerformed;
+    }
+
+    // --- [เพิ่มใหม่] ---
+    // LEAD COMMENT: สร้าง "สวิตช์" Public สำหรับเปิด/ปิด "สายลับ" ของเรา
+    public void EnableLightClickAction(bool enable)
+    {
+        if (enable)
+        {
+            _lightClickAction.Enable();
+            Debug.Log("Direct Light Click Action ENABLED");
+        }
+        else
+        {
+            _lightClickAction.Disable();
+            Debug.Log("Direct Light Click Action DISABLED");
+        }
     }
 
     private void OnEnable()
     {
-        // --- [วิธีใหม่] เปิดใช้งาน "สายไฟตรง" ของเรา ---
-        _lightClickAction.Enable();
+        // เปิดใช้งาน "สายลับ" เป็นค่าเริ่มต้น
+        EnableLightClickAction(true);
 
-        // --- [วิธีเก่า] เรายังคงใช้ระบบเดิมสำหรับ Action อื่นๆ ที่ทำงานได้ดีอยู่แล้ว ---
         _playerInput.actions["HeavyAttack"].performed += OnHeavyAttack;
         _playerInput.actions["Move"].performed += OnMove;
         _playerInput.actions["Move"].canceled += OnMove;
@@ -41,10 +62,9 @@ public class InputManager : MonoBehaviour
 
     private void OnDisable()
     {
-        // --- [วิธีใหม่] ปิดใช้งานและเก็บกวาด "สายไฟตรง" ของเรา ---
-        _lightClickAction.Disable();
+        // ปิดใช้งาน "สายลับ" เสมอเมื่อออกจาก Scene
+        EnableLightClickAction(false);
 
-        // --- [วิธีเก่า] ยกเลิกการรับฟังของ Action อื่นๆ ---
         _playerInput.actions["HeavyAttack"].performed -= OnHeavyAttack;
         _playerInput.actions["Move"].performed -= OnMove;
         _playerInput.actions["Move"].canceled -= OnMove;
@@ -52,31 +72,14 @@ public class InputManager : MonoBehaviour
         _playerInput.actions["Dash"].performed -= OnDash;
     }
 
-    // --- [วิธีใหม่] ฟังก์ชันที่จะถูกเรียกโดยตรงจาก _lightClickAction ของเรา ---
     private void OnLightAttackPerformed(InputAction.CallbackContext context)
     {
-        // เราส่ง context ที่ได้รับมา ไปให้ PlayerController เหมือนเดิมเป๊ะๆ
         _playerController.OnLightAttack(context);
     }
 
-    // --- ฟังก์ชันตัวกลางสำหรับ Action อื่นๆ ยังคงเหมือนเดิม ---
-    private void OnMove(InputAction.CallbackContext context)
-    {
-        _playerController.OnMove(context);
-    }
-
-    private void OnJump(InputAction.CallbackContext context)
-    {
-        _playerController.OnJump(context);
-    }
-
-    private void OnHeavyAttack(InputAction.CallbackContext context)
-    {
-        _playerController.OnHeavyAttack(context);
-    }
-
-    private void OnDash(InputAction.CallbackContext context)
-    {
-        _playerController.OnDash(context);
-    }
+    // ... (ฟังก์ชันตัวกลางอื่นๆ เหมือนเดิม) ...
+    private void OnMove(InputAction.CallbackContext context) { _playerController.OnMove(context); }
+    private void OnJump(InputAction.CallbackContext context) { _playerController.OnJump(context); }
+    private void OnHeavyAttack(InputAction.CallbackContext context) { _playerController.OnHeavyAttack(context); }
+    private void OnDash(InputAction.CallbackContext context) { _playerController.OnDash(context); }
 }

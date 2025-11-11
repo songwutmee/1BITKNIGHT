@@ -1,0 +1,65 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1267939131863557146
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4435807256414766690}
+  - component: {fileID: 8575216696919219049}
+  m_Layer: 0
+  m_Name: SkillTreeManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4435807256414766690
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267939131863557146}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.005992681, y: 1.4386411, z: 0.18600106}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8575216696919219049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267939131863557146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8afe1cc48d21b2948b12ff6d743fd989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStatus: {fileID: 0}
+  skillTreeWindow: {fileID: 0}
+  skillPointsText: {fileID: 0}
+  skillButtons:
+  - skillData: {fileID: 11400000, guid: 4abf8e6ae0e81ea4f9ba301fcd85b343, type: 2}
+    skillButton: {fileID: 0}
+  - skillData: {fileID: 11400000, guid: c904cd8bb55d0ba4d8043a37b59d7467, type: 2}
+    skillButton: {fileID: 0}
+  - skillData: {fileID: 11400000, guid: c454b17c681206440a475258f151c27a, type: 2}
+    skillButton: {fileID: 0}
+  - skillData: {fileID: 11400000, guid: 494009cf54bc7ae45a1b938ae0ba05c8, type: 2}
+    skillButton: {fileID: 0}
+  - skillData: {fileID: 11400000, guid: 410d59b91305df445b939c760a44fe1c, type: 2}
+    skillButton: {fileID: 0}
+  - skillData: {fileID: 0}
+    skillButton: {fileID: 0}
+  onSkillTreeChanged: {fileID: 11400000, guid: c8298f1fb3213494bab25eee515e58f5, type: 2}
+  skillPoints: 5
+  unlockedSkills: []
