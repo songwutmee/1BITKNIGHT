@@ -16,13 +16,10 @@ public class BossAIController : MonoBehaviour
     [Header("Event Channels")]
     public GameEvent OnBossAggro;
 
-    // --- [เพิ่มใหม่] ---
     [Header("Game Feel Settings")]
-    [Tooltip("ระยะเวลาที่บอสจะชะงัก (หน่วยเป็นวินาที) เมื่อถูกโจมตี")]
     public float hitStunDuration = 0.15f;
     private Coroutine _hitStunCoroutine;
 
-    // ... (ส่วน State Machine และ AI Parameters เหมือนเดิมทุกประการ) ...
     private IState _currentState;
     public IdleState idleState;
     public ChaseState chaseState;
@@ -79,13 +76,8 @@ public class BossAIController : MonoBehaviour
         Debug.LogWarning("BOSS HAS ENTERED PHASE 2!");
     }
 
-    // --- [เพิ่มใหม่] ---
-    // LEAD COMMENT: นี่คือฟังก์ชัน Public ที่ BossStatus จะเรียกใช้
-    // เราใช้ Coroutine เพื่อจัดการกับการ "หยุดเวลา" โดยไม่ไปบล็อกการทำงานของเกมทั้งหมด
-    // นี่คือ Pattern ที่ดีมากสำหรับการจัดการ Action ที่ต้องใช้เวลา
     public void TriggerHitStun()
     {
-        // หยุด Coroutine เก่า (ถ้ามี) ก่อนเริ่มอันใหม่ เพื่อป้องกันการทำงานซ้อนกัน
         if (_hitStunCoroutine != null)
         {
             StopCoroutine(_hitStunCoroutine);
@@ -95,17 +87,12 @@ public class BossAIController : MonoBehaviour
 
     private IEnumerator HitStunCoroutine()
     {
-        // 1. หยุดการเคลื่อนที่ของบอสทันที
-        if (agent.isOnNavMesh) // เช็คก่อนเพื่อป้องกัน error
         {
             agent.isStopped = true;
         }
 
-        // 2. "รอ" เป็นระยะเวลาสั้นๆ ตามที่เราตั้งค่าไว้
         yield return new WaitForSeconds(hitStunDuration);
 
-        // 3. สั่งให้บอสกลับมาเคลื่อนที่ต่อ (ถ้ามันยังมีชีวิตอยู่)
-        if (this.enabled) // เช็คว่า AI Controller ยังทำงานอยู่หรือไม่
         {
             if (agent.isOnNavMesh)
             {

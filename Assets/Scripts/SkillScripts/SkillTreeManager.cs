@@ -59,13 +59,11 @@ public class SkillTreeManager : MonoBehaviour
 
     public void UpdateAllButtonVisuals()
     {
-        // อัปเดต Text ของ Skill Points
         if (skillPointsText != null)
         {
             skillPointsText.text = $"Skill Points : {skillPoints}";
         }
 
-        // อัปเดตปุ่มสกิลทุกปุ่ม
         foreach (var link in skillButtons)
         {
             if (link.skillButton != null)
@@ -75,7 +73,6 @@ public class SkillTreeManager : MonoBehaviour
 
     public void UnlockSkill(Skill_SO skillToUnlock)
     {
-        // --- ส่วนตรวจสอบเงื่อนไข (เหมือนเดิม) ---
         if (unlockedSkills.Contains(skillToUnlock) || skillPoints < skillToUnlock.cost) return;
 
         bool requirementsMet = true;
@@ -89,20 +86,13 @@ public class SkillTreeManager : MonoBehaviour
         }
         if (!requirementsMet) return;
 
-        // --- ส่วนจัดการข้อมูล (เหมือนเดิม) ---
         skillPoints -= skillToUnlock.cost;
         unlockedSkills.Add(skillToUnlock);
         ApplySkillEffect(skillToUnlock);
 
-        // --- [THE FIX!] ---
-        // LEAD COMMENT: นี่คือ 2 บรรทัดที่ขาดหายไป!
-        // หลังจากที่เราเปลี่ยนแปลงข้อมูลทั้งหมดแล้ว เราต้อง "สั่ง" ให้ UI ทั้งหมด
-        // ทำการ "รีเฟรช" หรือ "วาดตัวเองใหม่" ตามข้อมูลล่าสุด
 
-        // 1. สั่งให้ปุ่มและ Text ทั้งหมดอัปเดตตัวเอง
         UpdateAllButtonVisuals();
 
-        // 2. ส่งสัญญาณ Event (เผื่อมีระบบอื่นรอฟังอยู่ เช่น เสียงอัปเกรดสกิล)
         if (onSkillTreeChanged != null)
         {
             onSkillTreeChanged.Raise();

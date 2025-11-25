@@ -52,9 +52,6 @@ public class GameManager : MonoBehaviour
     {
         if (_playerInput != null)
         {
-            // --- [THE FIX] ---
-            // LEAD COMMENT: เราจะเปิดใช้งาน Action Map "Global" อย่างถาวร
-            // และจะดึง Action "Pause" มาจาก Map นี้เท่านั้น
             _playerInput.actions.FindActionMap("Global").Enable();
             _playerInput.actions["Pause"].performed += OnPause;
             Debug.Log("GameManager subscribed to Pause action from GLOBAL map.");

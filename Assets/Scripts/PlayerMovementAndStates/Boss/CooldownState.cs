@@ -14,7 +14,6 @@ public class CooldownState : IState
 
     public void Enter()
     {
-        // เริ่มนับเวลาถอยหลัง โดยใช้เวลาตาม Phase ปัจจุบัน
         _cooldownTimer = _controller.CurrentCooldownTime;
     }
 
@@ -22,7 +21,6 @@ public class CooldownState : IState
     {
         _cooldownTimer -= Time.deltaTime;
 
-        // เมื่อพักเสร็จ, กลับไปตัดสินใจใหม่ (อาจจะไล่ล่าต่อ หรือ โจมตีทันทีถ้าผู้เล่นยังอยู่ใกล้)
         if (_cooldownTimer <= 0f)
         {
             float distanceToPlayer = Vector3.Distance(_controller.transform.position, _controller.playerTarget.position);
@@ -38,3 +36,4 @@ public class CooldownState : IState
     }
     public void Exit() { }
 }
+

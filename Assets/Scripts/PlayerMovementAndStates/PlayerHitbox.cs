@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerHitbox : MonoBehaviour
 {
-    [Tooltip("ดาเมจพื้นฐานของ 'อาวุธ' ชิ้นนี้")]
     public float baseDamage = 12f;
     private Collider _collider;
     private PlayerStatus _playerStatus;
@@ -37,14 +36,10 @@ public class PlayerHitbox : MonoBehaviour
                 totalDamage += _playerStatus.runtimeStats.attackPower;
             }
 
-            // --- [อัปเกรด] ---
-            // หา "จุดที่ใกล้ที่สุด" บน Collider ของศัตรู เทียบกับตำแหน่งของ Hitbox ของเรา
-            // เพื่อหาจุดปะทะที่สมจริงที่สุด
             Vector3 hitPoint = other.ClosestPoint(transform.position);
 
             Debug.Log("Player hit the Boss! Dealing " + totalDamage + " damage at " + hitPoint);
 
-            // ส่งข้อมูลดาเมจ "และ" ตำแหน่งที่ปะทะไปด้วย
             bossStatus.TakeDamage(totalDamage, hitPoint);
 
             _hitEnemies.Add(other);

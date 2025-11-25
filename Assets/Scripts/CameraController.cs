@@ -22,21 +22,13 @@ public class CameraController : MonoBehaviour
 
     private Vector3 _currentShakeOffset = Vector3.zero;
 
-    // --- [แก้ไข] ---
-    // LEAD COMMENT: เราได้ลบโค้ด Cursor.lockState และ Cursor.visible ออกจากฟังก์ชัน Start() แล้ว
-    // เพราะตอนนี้ GameManager ได้กลายเป็น "ผู้มีอำนาจเพียงผู้เดียว" (Single Source of Truth)
-    // ในการจัดการสถานะของเคอร์เซอร์ ซึ่งเป็นสถาปัตยกรรมที่ดีกว่า
     void Start()
     {
-        // ที่นี่เคยมีโค้ดล็อกเมาส์ แต่ตอนนี้มันว่างเปล่า ซึ่งถูกต้องแล้ว!
+        
     }
 
     void LateUpdate()
     {
-        // --- [เพิ่มใหม่] ---
-        // LEAD COMMENT: เพิ่มการตรวจสอบเพื่อให้แน่ใจว่ากล้องจะหมุนก็ต่อเมื่อ
-        // อยู่ในโหมด Gameplay (เคอร์เซอร์ถูกล็อก) เท่านั้น
-        // นี่เป็นการป้องกันไม่ให้มุมกล้องเหวี่ยงไปมาตอนที่ผู้เล่นกำลังคลิก UI
         if (Cursor.lockState != CursorLockMode.Locked)
         {
             return;

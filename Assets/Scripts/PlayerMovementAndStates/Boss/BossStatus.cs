@@ -18,8 +18,7 @@ public class BossStatus : MonoBehaviour
 
     [Header("Game Feel & Feedback")]
     public AudioClip hitSound;
-    [Tooltip("Particle Effect ที่จะเล่นเมื่อบอสโดนโจมตี")]
-    public GameObject hitVFX; // ลาก Prefab ของ Particle System มาใส่ที่นี่
+    public GameObject hitVFX; 
 
     private float _currentHealth;
     public float CurrentHealth => _currentHealth;
@@ -36,14 +35,12 @@ public class BossStatus : MonoBehaviour
         _currentHealth = baseStats.maxHealth;
     }
 
-    // --- [อัปเกรด] --- เพิ่มพารามิเตอร์ Vector3 hitPoint
     public void TakeDamage(float damage, Vector3 hitPoint)
     {
         if (_isDead) return;
         _currentHealth -= damage;
         _currentHealth = Mathf.Max(_currentHealth, 0);
 
-        // ส่ง hitPoint ต่อไปให้ TriggerHitFeedback
         TriggerHitFeedback(hitPoint);
 
         if (onBossDamaged != null) onBossDamaged.Raise();
@@ -52,19 +49,16 @@ public class BossStatus : MonoBehaviour
         if (_currentHealth <= 0) Die();
     }
 
-    // โอเวอร์โหลดเมธอดเดิมไว้เผื่อกรณีที่เรียกใช้โดยไม่มีตำแหน่ง (Backward Compatibility)
     public void TakeDamage(float damage)
     {
         TakeDamage(damage, transform.position);
     }
 
-    // --- [อัปเกรด] --- รับ hitPoint เข้ามาเพื่อใช้ในการสร้าง VFX
     private void TriggerHitFeedback(Vector3 hitPoint)
     {
         if (hitSound != null && _audioSource != null) _audioSource.PlayOneShot(hitSound);
         if (_aiController != null) _aiController.TriggerHitStun();
 
-        // --- [เพิ่มใหม่] --- สร้าง (Instantiate) VFX prefab ขึ้นมาในตำแหน่งที่ปะทะ
         if (hitVFX != null)
         {
             Quaternion hitRotation = Quaternion.LookRotation(hitPoint - transform.position);

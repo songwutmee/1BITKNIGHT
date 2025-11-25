@@ -28,8 +28,6 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         skillData = skill;
         skillTreeManager = manager;
 
-        // --- [อัปเกรด] ---
-        // ตอนเริ่มต้น ให้ใช้ไอคอน "ล็อก" เป็นค่าเริ่มต้นเสมอ
         iconImage.sprite = skillData.lockedIcon;
 
         button.onClick.AddListener(() => skillTreeManager.UnlockSkill(skillData));
@@ -69,26 +67,16 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         _currentState = newState;
 
-        // --- [อัปเกรดครั้งใหญ่!] ---
-        // LEAD COMMENT: นี่คือตรรกะใหม่ที่ควบคุมทั้ง "Sprite" และ "Color"
-        // ทำให้การแสดงผลของเราชัดเจนและสวยงามยิ่งขึ้น
         switch (_currentState)
         {
             case SkillState.Unlocked:
-                iconImage.sprite = skillData.unlockedIcon; // ใช้ Sprite ที่ปลดล็อกแล้ว
-                iconImage.color = unlockedColor;           // ตั้งค่าสีให้สว่างเต็มที่
                 frameImage.color = unlockedColor;
                 button.interactable = false;
                 break;
             case SkillState.Unlockable:
-                iconImage.sprite = skillData.lockedIcon;    // ยังคงใช้ Sprite ที่ล็อกอยู่
-                iconImage.color = lockedColor;              // แต่ตั้งค่าสีพื้นฐานเป็นสีเทา
-                frameImage.color = unlockableFrameColor;    // และใช้กรอบสีเขียวเพื่อดึงดูด
                 button.interactable = true;
                 break;
             case SkillState.Locked:
-                iconImage.sprite = skillData.lockedIcon;    // ใช้ Sprite ที่ล็อกอยู่
-                iconImage.color = lockedColor;              // ตั้งค่าสีเป็นสีเทา
                 frameImage.color = lockedColor;
                 button.interactable = false;
                 break;
@@ -99,10 +87,7 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (_currentState == SkillState.Unlockable)
         {
-            // --- [อัปเกรด] ---
-            // เราจะเปลี่ยน Sprite เป็นเวอร์ชันปลดล็อกชั่วคราว เพื่อพรีวิวให้ผู้เล่นเห็น
             iconImage.sprite = skillData.unlockedIcon;
-            iconImage.color = unlockedColor; // ทำให้สว่างขึ้น
         }
     }
 
@@ -110,7 +95,6 @@ public class SkillButtonUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (_currentState == SkillState.Unlockable)
         {
-            // เปลี่ยนกลับไปเป็นสถานะดั้งเดิม
             iconImage.sprite = skillData.lockedIcon;
             iconImage.color = lockedColor;
         }

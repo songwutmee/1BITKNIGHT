@@ -13,14 +13,12 @@ public class PlayerStatus : MonoBehaviour
     public GameEvent onHealthChanged;
     public GameEvent onStaminaChanged;
 
-    [Header("Game Feel & Feedback")]
-    [Tooltip("เสียงที่จะเล่นเมื่อผู้เล่นได้รับความเสียหาย")]
+    [Header("SFX")]
+   
     public AudioClip hitSound;
-    [Tooltip("เสียงเหวี่ยงอาวุธ (Swoosh)")]
     public AudioClip swingSound;
-    [Tooltip("เสียงกลิ้งหลบ")]
     public AudioClip dodgeSound;
-    [Tooltip("เสียงเมื่อพยายามใช้ Stamina แต่ไม่พอ")]
+   
     public AudioClip noStaminaSound;
 
     [HideInInspector]

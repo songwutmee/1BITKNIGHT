@@ -9,12 +9,10 @@ public class BossCombat : MonoBehaviour
     public BossAIController controller;
     private Animator _animator;
 
-    // --- [อัปเกรด] ---
     [Header("Hitboxes")]
-    public BossHitbox rightWeaponHitbox; // เปลี่ยนจาก Collider เป็น BossHitbox Script
-    public BossHitbox leftWeaponHitbox;  // เปลี่ยนจาก Collider เป็น BossHitbox Script
+    public BossHitbox rightWeaponHitbox; 
+    public BossHitbox leftWeaponHitbox;  
 
-    // ... (Attack Data และ Hashes เหมือนเดิม) ...
     [Header("Attack Data")]
     public float attack1_Duration = 1.5f;
     public float attack2_Duration = 1.2f;
@@ -27,20 +25,17 @@ public class BossCombat : MonoBehaviour
     void Awake()
     {
         _animator = GetComponent<Animator>();
-        // ตรวจสอบค่า Null เพื่อป้องกัน Error ล่วงหน้า
         if (rightWeaponHitbox == null || leftWeaponHitbox == null)
         {
             Debug.LogError("One or more weapon hitboxes are not assigned in BossCombat!", this.gameObject);
         }
         else
         {
-            // ปิด Hitbox ทั้งหมดไว้ก่อน
             rightWeaponHitbox.SetActive(false);
             leftWeaponHitbox.SetActive(false);
         }
     }
 
-    // ... (PerformAttack และ Coroutine เหมือนเดิม) ...
     public void PerformAttack()
     {
         if (isAttacking) return;
@@ -60,8 +55,6 @@ public class BossCombat : MonoBehaviour
         isAttacking = false;
     }
 
-    // --- [อัปเกรด] Animation Event Functions ---
-    // เราจะเรียกฟังก์ชัน SetActive() ที่เราสร้างขึ้นมาใหม่แทน
     public void EnableRightWeaponHitbox() { if (rightWeaponHitbox != null) rightWeaponHitbox.SetActive(true); }
     public void DisableRightWeaponHitbox() { if (rightWeaponHitbox != null) rightWeaponHitbox.SetActive(false); }
     public void EnableLeftWeaponHitbox() { if (leftWeaponHitbox != null) leftWeaponHitbox.SetActive(true); }

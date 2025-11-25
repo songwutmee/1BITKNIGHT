@@ -6,9 +6,6 @@ public class PlayerGroundedState : IPlayerState
 {
     private readonly PlayerController _playerController;
 
-    // --- [อัปเกรด] ---
-    // Cache ค่า Stamina cost ไว้ใน Constructor เพื่อประสิทธิภาพที่ดีขึ้น
-    // จะได้ไม่ต้องไปดึงค่าจาก ScriptableObject ทุกครั้งที่กดปุ่ม
     private readonly float _lightAttackStaminaCost;
     private readonly float _heavyAttackStaminaCost;
     private readonly float _dodgeStaminaCost;
@@ -16,7 +13,6 @@ public class PlayerGroundedState : IPlayerState
     public PlayerGroundedState(PlayerController playerController)
     {
         _playerController = playerController;
-        // ดึงค่ามาเก็บไว้ที่นี่แค่ครั้งเดียว
         _lightAttackStaminaCost = playerController.PlayerStatus.baseStats.lightAttackStaminaCost;
         _heavyAttackStaminaCost = playerController.PlayerStatus.baseStats.heavyAttackStaminaCost;
         _dodgeStaminaCost = playerController.PlayerStatus.baseStats.dodgeStaminaCost;
@@ -26,9 +22,6 @@ public class PlayerGroundedState : IPlayerState
 
     public void Update()
     {
-        // --- [อัปเกรด] ---
-        // ใช้โค้ดการเคลื่อนไหวและการอัปเดต Animator ที่มีการหน่วง (smoothing)
-        // เพื่อให้การเปลี่ยนจากท่าหยุดเป็นท่าเดินดูนุ่มนวลขึ้น
         _playerController.MoveCharacter();
         _playerController.GetAnimator().SetFloat(_playerController.SpeedHash, _playerController.MoveInput.magnitude, 0.1f, Time.deltaTime);
     }
@@ -51,7 +44,6 @@ public class PlayerGroundedState : IPlayerState
         }
         else
         {
-            // --- [THE FIX] ---
             _playerController.PlayerStatus.PlayNoStaminaSound();
         }
     }
@@ -65,7 +57,6 @@ public class PlayerGroundedState : IPlayerState
         }
         else
         {
-            // --- [THE FIX] ---
             _playerController.PlayerStatus.PlayNoStaminaSound();
         }
     }
@@ -79,7 +70,6 @@ public class PlayerGroundedState : IPlayerState
         }
         else
         {
-            // --- [THE FIX] ---
             _playerController.PlayerStatus.PlayNoStaminaSound();
         }
     }

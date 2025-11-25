@@ -6,33 +6,24 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(PlayerInput))]
-// LEAD COMMENT: เพิ่ม PlayerStatus เข้าไปใน RequireComponent ด้วย
-// เพื่อให้แน่ใจว่าระบบทั้งหมดทำงานร่วมกันได้
 [RequireComponent(typeof(PlayerStatus))]
 public class PlayerController : MonoBehaviour
 {
-    // --- Dependencies ---
     private CharacterController _controller;
     private Animator _animator;
     private Transform _mainCameraTransform;
-    // --- [เพิ่มใหม่] ---
-    // LEAD COMMENT: เพิ่ม reference ไปยัง PlayerStatus เพื่อให้ State ต่างๆ
-    // สามารถตรวจสอบและใช้ Stamina ได้ นี่คือการสื่อสารระหว่าง Component โดยตรง
     public PlayerStatus PlayerStatus { get; private set; }
 
-    // --- State Machine ---
     private IPlayerState _currentState;
     public PlayerGroundedState GroundedState { get; private set; }
     public PlayerAttackState AttackState { get; private set; }
     public PlayerDodgeState DodgeState { get; private set; }
-    // --- [เพิ่มใหม่] ---
+   
     public PlayerGetHitState GetHitState { get; private set; }
 
 
-    // --- Input Handling ---
     public Vector2 MoveInput { get; private set; }
 
-    // --- Movement & Rotation Parameters ---
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed = 5.0f;
     [SerializeField] private float _rotationSpeed = 15.0f;
@@ -40,8 +31,6 @@ public class PlayerController : MonoBehaviour
     [Header("Ground Check & Gravity")]
     [SerializeField] private float _gravity = -9.81f;
     private Vector3 _verticalVelocity;
-
-    // --- Animator Hashes ---
     public readonly int SpeedHash = Animator.StringToHash("Speed");
     public readonly int LightAttackHash = Animator.StringToHash("LightAttack");
     public readonly int HeavyAttackHash = Animator.StringToHash("HeavyAttack");
@@ -55,14 +44,12 @@ public class PlayerController : MonoBehaviour
         _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
         _mainCameraTransform = Camera.main.transform;
-        // --- [เพิ่มใหม่] ---
-        PlayerStatus = GetComponent<PlayerStatus>(); // Cache PlayerStatus
+   
+        PlayerStatus = GetComponent<PlayerStatus>(); 
 
-        // --- State Machine Initialization ---
         GroundedState = new PlayerGroundedState(this);
         AttackState = new PlayerAttackState(this);
         DodgeState = new PlayerDodgeState(this);
-        // --- [เพิ่มใหม่] ---
         GetHitState = new PlayerGetHitState(this);
     }
 
@@ -84,12 +71,8 @@ public class PlayerController : MonoBehaviour
         _currentState.Enter();
     }
 
-    // --- [เพิ่มใหม่] ---
-    // LEAD COMMENT: นี่คือฟังก์ชันที่ PlayerStatus จะเรียกใช้
-    // มันทำหน้าที่เป็น "สะพาน" ไปยัง GetHitState
     public void PlayGetHitAnimation()
     {
-        // เราจะเปลี่ยนไป GetHitState ซึ่งจะจัดการล็อคการควบคุมและเล่น Animation เอง
         SwitchState(GetHitState);
     }
 

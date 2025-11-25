@@ -30,16 +30,10 @@ public class GameUIManager : MonoBehaviour
         pauseScreenParent.SetActive(false);
     }
 
-    // --- [THE FIX!] ---
-    // LEAD COMMENT: ตอนนี้ 'ShowEndScreen' ได้กลายเป็นศูนย์บัญชาการของฉากจบ
-    // มันไม่เพียงแต่แสดง UI แต่ยังรับผิดชอบในการสั่ง GameManager ให้เข้าสู่ UI Mode ด้วย
-    // การรวมศูนย์ตรรกะไว้ที่นี่ ทำให้การเชื่อมต่อแข็งแกร่งและทำงานได้ถูกต้องทุกครั้งที่ Restart
     public void ShowEndScreen(bool victory)
     {
-        // 1. สั่ง GameManager ให้โชว์เมาส์และปลดล็อกการควบคุม
         GameManager.Instance.EnterUIMode();
 
-        // 2. แสดง UI และเริ่ม Fade-in
         endScreenParent.SetActive(true);
         resultText.text = victory ? "VICTORY" : "GAME OVER";
         StartCoroutine(FadeInCoroutine(_endScreenCanvasGroup));
