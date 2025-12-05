@@ -39,7 +39,7 @@ This pattern is used to manage the complex behaviors of our dynamic characters.
 
 This is the central nervous system of our project, enabling complete decoupling between major systems.
 
-*   **What it is:** A "Subject" object maintains a list of its "Observers" and notifies them automatically of any state changes. We implement this using Scriptable Objects to create a global event bus.
+*   **What it is:** A "Subject" object maintains a list of its "Observers" and notifies them automatically of any state changes. I implement this using Scriptable Objects to create a global event bus.
 *   **How it's used:** `GameEvent` assets act as broadcast channels. When `PlayerStatus` takes damage, it doesn't know about the UI; it simply `Raises` the `OnPlayerHealthChanged` event. The `UIManager` and `DamageVignetteUI` use a `GameEventListener` component to "listen" for this specific event and react accordingly.
 
 ### 4. Singleton Pattern
