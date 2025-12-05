@@ -51,13 +51,3 @@ This pattern is used sparingly for globally accessible manager systems.
 
 ---
 
-## Core Systems Breakdown
-
-### AI Behaviour
-
-*   **How it works:** The `BossAIController` uses the **State Pattern**. It transitions between `IdleState` (waiting), `ChaseState` (pursuing the player), and `AttackState` (performing an attack). The transition logic is simple and contained within each state. For example, `IdleState` checks the distance to the player against the `aggroRange` defined in its `CharacterStats_SO`.
-*   **Phases:** When the boss's health drops below a threshold, the `BossAIController` changes its `currentPhase` variable. This causes it to read different values for speed and cooldown times, making it more aggressive.
-
-### Status System
-
-*   **How it works:** `PlayerStatus` and `BossStatus` load their initial values from a `CharacterStats_SO` asset (**Data-Oriented**). When `TakeDamage` is called, the character's `defense` s
