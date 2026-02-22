@@ -4,7 +4,7 @@
 
 
 <a href="https://www.youtube.com/watch?v=8siNsZ8Pb-A" target="_blank">
-  <img src="https://i.imgur.com/YOUR_COVER_IMAGE.jpg" width="100%" alt="1-Bit Knight Cover Image">
+  <img src="https://img.youtube.com/vi/8siNsZ8Pb-A/0.jpg" width="100%" alt="1BitKnight Gameplay">
 </a>
 
 </div>
